@@ -60,7 +60,6 @@ int main () {
 	pop(&st);
 	pop(&st);
 	pop(&st);
-	pop(&st);
 	printf("TOP:%d\n", *(int *)(access_top(&st)->data));
 	return 0;
 }
