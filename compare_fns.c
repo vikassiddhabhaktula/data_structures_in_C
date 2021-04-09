@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define DEBUG
-
 #define FOREACH(i, max, x) \
 	do { \
 		for (i=0; i<max; i++) { \
@@ -22,7 +20,7 @@
 	} \
 	while(0);
 
-#ifdef DEBUG
+#ifdef VS_DEBUG
 	#define PLL(x)		printf("%lld ", x)
 	#define PI(x)		printf("%d ", x)
 	#define PD(x)		printf("%lf ", x)
@@ -44,20 +42,21 @@
 		while(0);
 #else
 	#define PLL(x)
+	#define PI(x)
 	#define PD(x)
 	#define PS(x)
 	#define PC(x)
-	#define P(x)
+	#define P(fmt, x)
 	#define PN()
 	#define PRINTER(i, max, x)
+	#define PRINTER_2D(o, omax, i, imax, x)
 #endif
 
 /*
  * 	Print helper APIS
  */
 void print_header(const char *s) {
-	PS(s);
-	PN();
+	P("%s\n", s);
 }
 
 void int_printer(int *arr, int num_els) {
