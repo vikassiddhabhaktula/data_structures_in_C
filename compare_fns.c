@@ -2,39 +2,82 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define DEBUG
+
+#define FOREACH(i, max, x) \
+	do { \
+		for (i=0; i<max; i++) { \
+			(x); \
+		} \
+	} \
+	while(0);
+
+#define FOREACH_2D(o, omax, i, imax, x) \
+	do { \
+		for (o=0; o<omax; o++) { \
+			for (i=0; i<imax; i++)	{ \
+				(x); \
+			} \
+		} \
+	} \
+	while(0);
+
+#ifdef DEBUG
+	#define PLL(x)		printf("%lld ", x)
+	#define PI(x)		printf("%d ", x)
+	#define PD(x)		printf("%lf ", x)
+	#define PS(x)		printf("%s ", x)
+	#define PC(x)		printf("%c ", x)
+	#define P(fmt, x)	printf(fmt, x)
+	#define PN()		printf("\n")
+	#define PRINTER(i, max, x)	\
+		do { \
+			FOREACH(i, max, x); \
+			PN(); \
+		} \
+		while(0);
+	#define PRINTER_2D(o, omax, i, imax, x)	\
+		do { \
+			FOREACH_2D(o, omax, i, imax, x); \
+			PN(); \
+		} \
+		while(0);
+#else
+	#define PLL(x)
+	#define PD(x)
+	#define PS(x)
+	#define PC(x)
+	#define P(x)
+	#define PN()
+	#define PRINTER(i, max, x)
+#endif
+
 /*
  * 	Print helper APIS
  */
 void print_header(const char *s) {
-	printf("%s\n", s);
+	PS(s);
+	PN();
 }
 
 void int_printer(int *arr, int num_els) {
 	int i=0;
-	for (i=0; i<num_els; i++) {
-		printf("%d ", arr[i]);
-	}
-	printf("\n");
+	PRINTER(i, num_els, PI(arr[i]));
 }
 
 void int2D_printer(int *arr, int num_els, int dim) {
 	int i=0, j=0;
-	for (i=0; i<num_els; i++) {
-		for (j=0; j<dim; j++)
-			printf("%d ", *(arr + i*dim + j));
-		printf("\t");
-	}
-	printf("\n");
+	PRINTER_2D(i, num_els, j, dim, PI(*(arr + i*dim + j)));
 }
 
 void ptr2D_printer(int **arr, int num_els, int dim) {
 	int i=0, j=0;
-	for (i=0; i<num_els; i++) {
-		for (j=0; j<dim; j++)
-			printf("%d ", arr[i][j]);
-		printf("\t");
-	}
-	printf("\n");
+	PRINTER_2D(i, num_els, j, dim, PI(arr[i][j]));
+}
+
+void ch_printer(char *arr, int num_els) {
+	int i=0;
+	PRINTER(i, num_els, PC(arr[i]));
 }
 
 /*	int compare	*/
@@ -91,14 +134,12 @@ struct record {
 
 void st_printer(struct record **ptr, int num_els) {
 	int i=0;
-	for (i=0; i<num_els; i++) {
-		printf("%s %d %lf ", ptr[i]->name, ptr[i]->id, ptr[i]->rating);
-	}
-	printf("\n");
+	PRINTER(i, num_els, printf("%s %d %lf ", ptr[i]->name, ptr[i]->id, ptr[i]->rating));
 }
 
 /*
  * 	sort based on rating of the employees
+ * 	also based on the lexographical string
  */
 int asc_st(const void *el1, const void *el2) {
 	struct record *p1 = *(struct record **)el1;
@@ -110,6 +151,37 @@ int des_st(const void *el1, const void *el2) {
 	struct record *p1 = *(struct record **)el1;
 	struct record *p2 = *(struct record **)el2;
 	return p2->rating - p1->rating;
+}
+
+int asc_str(const void *el1, const void *el2) {
+	struct record *p1 = *(struct record **)el1;
+	struct record *p2 = *(struct record **)el2;
+	return strcmp(p1->name, p2->name);
+}
+
+int des_str(const void *el1, const void *el2) {
+	struct record *p1 = *(struct record **)el1;
+	struct record *p2 = *(struct record **)el2;
+	return strcmp(p2->name, p1->name);
+}
+/*
+ * 	Sort characters
+ */
+int asc_ch(const void *el1, const void *el2) {
+	return *(char *)el1 - *(char *)el2;
+}
+
+int des_ch(const void *el1, const void *el2) {
+	return *(char *)el2 - *(char *)el1;
+}
+
+/*
+ * 	Sort strings
+ */
+int asc_pure_str(const void *el1, const void *el2) {
+	char *s1 = *(char **)el1;
+	char *s2 = *(char **)el2;
+	return strcmp(s1, s2);
 }
 
 int main() {
@@ -156,4 +228,20 @@ int main() {
 	st_printer(st_p, 5);
 	qsort(st_p, 5, sizeof(struct record *), asc_st);
 	st_printer(st_p, 5);
+	qsort(st_p, 5, sizeof(struct record *), asc_str);
+	st_printer(st_p, 5);
+
+	print_header("/*	array of characters	*/");
+	char ch_arr[5] = {'a', '9', '8', '7', '6'};
+	ch_printer(ch_arr, 5);
+	qsort(ch_arr, 5, sizeof(char), asc_ch);
+	ch_printer(ch_arr, 5);
+
+	print_header("/*	array of strings	*/");
+	char **str_p = (char **)calloc(5, sizeof(char *));
+	FOREACH(i, 5, 	str_p[i] = (char *)calloc(100, sizeof(char)));
+	FOREACH(i, 5,	memcpy(str_p[i], names[i], sizeof(char *)));
+	PRINTER(i, 5, PS(str_p[i]));
+	qsort(str_p, 5, sizeof(char *), asc_pure_str);
+	PRINTER(i, 5, PS(str_p[i]));
 }
