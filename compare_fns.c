@@ -2,54 +2,54 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define FOREACH(i, max, x) \
+#define FOREACH(i, max, EXPR) \
 	do { \
 		for (i=0; i<max; i++) { \
-			(x); \
+			(EXPR); \
 		} \
 	} \
 	while(0);
 
-#define FOREACH_2D(o, omax, i, imax, x) \
+#define FOREACH_2D(o, omax, i, imax, EXPR) \
 	do { \
 		for (o=0; o<omax; o++) { \
 			for (i=0; i<imax; i++)	{ \
-				(x); \
+				(EXPR); \
 			} \
 		} \
 	} \
 	while(0);
 
 #ifdef VS_DEBUG
-	#define PLL(x)		printf("%lld ", x)
-	#define PI(x)		printf("%d ", x)
-	#define PD(x)		printf("%lf ", x)
-	#define PS(x)		printf("%s ", x)
-	#define PC(x)		printf("%c ", x)
-	#define P(fmt, x)	printf(fmt, x)
+	#define PLL(EXPR)		printf("%lld ", EXPR)
+	#define PI(EXPR)		printf("%d ", EXPR)
+	#define PD(EXPR)		printf("%lf ", EXPR)
+	#define PS(EXPR)		printf("%s ", EXPR)
+	#define PC(EXPR)		printf("%c ", EXPR)
+	#define P(fmt, EXPR)	printf(fmt, EXPR)
 	#define PN()		printf("\n")
-	#define PRINTER(i, max, x)	\
+	#define PRINTER(i, max, EXPR)	\
 		do { \
-			FOREACH(i, max, x); \
+			FOREACH(i, max, EXPR); \
 			PN(); \
 		} \
 		while(0);
-	#define PRINTER_2D(o, omax, i, imax, x)	\
+	#define PRINTER_2D(o, omax, i, imax, EXPR)	\
 		do { \
-			FOREACH_2D(o, omax, i, imax, x); \
+			FOREACH_2D(o, omax, i, imax, EXPR); \
 			PN(); \
 		} \
 		while(0);
 #else
-	#define PLL(x)
-	#define PI(x)
-	#define PD(x)
-	#define PS(x)
-	#define PC(x)
-	#define P(fmt, x)
+	#define PLL(EXPR)
+	#define PI(EXPR)
+	#define PD(EXPR)
+	#define PS(EXPR)
+	#define PC(EXPR)
+	#define P(fmt, EXPR)
 	#define PN()
-	#define PRINTER(i, max, x)
-	#define PRINTER_2D(o, omax, i, imax, x)
+	#define PRINTER(i, max, EXPR)
+	#define PRINTER_2D(o, omax, i, imax, EXPR)
 #endif
 
 /*
