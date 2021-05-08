@@ -4,3 +4,4 @@ Data structures libraries for C
 2. queue.c --> singly linked list based generic queue
 3. bst.c --> double linked list based generic tree
 4. compare_fns.c --> compare functions for various types of data structures
+5. singly_ll.c --> generic singly linked list library and apis
